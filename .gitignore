@@ -2,6 +2,9 @@
 **/Debug/
 **/Release/
 
+# Vendor CMSIS DSP test suite copied by STM32CubeMX "copy all"
+**/Drivers/CMSIS/DSP/DSP_Lib_TestSuite/
+
 # Local IDE and workspace state
 **/.settings/
 .metadata/
