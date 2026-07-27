@@ -4,7 +4,7 @@
 
 Create the initial `main` branch for an intern training project targeting the
 NUCLEO-L432KC (STM32L432KC). The project teaches finite-state-machine design,
-layered embedded software, testable hardware abstraction, and four-channel pH
+layered embedded software, hardware abstraction, and four-channel pH
 acquisition with the SIC8250.
 
 The repository must provide a buildable, safe project skeleton without
@@ -32,8 +32,6 @@ voltage-to-pH conversion.
 - Fix the required channel count at four while leaving channel scheduling and
   channel-selection implementation to the intern.
 - Provide compile-safe stubs that never access hardware until implemented.
-- Provide a host-build smoke test, a fake hardware port, and CI scaffolding
-  without revealing the state machine or register sequence.
 - Document a feature-branch and pull-request workflow while creating only the
   `main` branch.
 
@@ -51,8 +49,6 @@ voltage-to-pH conversion.
 
 ```text
 Intern_8250-pHSensor/
-|-- .github/workflows/
-|   `-- ci.yml
 |-- docs/
 |   |-- assignment.md
 |   |-- SIC8250_pH_OCP_Flow.drawio
@@ -67,10 +63,7 @@ Intern_8250-pHSensor/
 |       |-- Domain/
 |       |-- Drivers/SIC8250/
 |       `-- BSP/
-|-- tests/
-|   `-- host/
 |-- .gitignore
-|-- CMakeLists.txt
 `-- README.md
 ```
 
@@ -176,8 +169,7 @@ minimum hardware services required by higher layers:
 
 No SPI peripheral, GPIO pin, chip-select pin, power pin, or reset pin is
 selected in the initial project. The board implementation returns
-`PH_STATUS_NOT_IMPLEMENTED` and performs no I/O. The host fake implements the
-same port without STM32 headers.
+`PH_STATUS_NOT_IMPLEMENTED` and performs no I/O.
 
 ## Data Flow
 
@@ -210,31 +202,12 @@ scheduling algorithm.
   configures, starts, reads, or stops the SIC8250.
 - A channel error must retain the correct channel identity.
 
-## Testing and CI
+## Build Verification
 
-The initial host test suite verifies only:
-
-- the portable layers compile without STM32 headers;
-- `PH_CHANNEL_COUNT` equals four;
-- the unimplemented application remains safe and returns the documented
-  status;
-- the fake BSP can be linked for future intern tests.
-
-The initial tests must not encode the expected operational state sequence,
-SIC8250 register values, channel-selection behavior, conversion formula, or
-retry policy.
-
-GitHub Actions builds the portable code and runs the smoke test. STM32CubeIDE
-remains the authoritative target build for the board project.
-
-The assignment requires the intern to add unit tests for:
-
-- nominal FSM transitions;
-- ADC-ready polling without blocking;
-- timeout behavior;
-- SPI failure behavior;
-- movement between all four channels;
-- channel identity on samples and errors.
+No automated tests, host test harness, fake BSP, CMake host build, or CI
+workflow are included. Verification of the initial skeleton is limited to
+opening the project in STM32CubeIDE and confirming that the unconfigured,
+safe-idle firmware builds successfully.
 
 ## Assignment Guidance
 
@@ -247,8 +220,7 @@ The assignment requires the intern to add unit tests for:
 5. make the one-channel operation reusable for channels 0 through 3;
 6. design the four-channel scheduling policy;
 7. implement ready, timeout, retry, and safe-stop behavior;
-8. implement conversion and channel-tagged reporting;
-9. add host tests before opening a pull request.
+8. implement conversion and channel-tagged reporting.
 
 The documentation explains responsibilities and acceptance criteria but does
 not provide completed code or a transition solution.
@@ -267,9 +239,8 @@ not provide completed code or a transition solution.
 
 - The repository contains only the `main` branch created by this setup.
 - STM32CubeIDE recognizes the STM32L432KC project and its `.ioc` file.
+- The safe-idle skeleton builds successfully in STM32CubeIDE.
 - No real SPI/GPIO assignment or SIC8250 register sequence is present.
-- The portable host build and smoke test pass.
-- CI runs the same host build and smoke test.
 - Project-owned code is divided into Application, Domain, SIC8250 driver, and
   BSP layers.
 - The stub supports the four-channel data model without implementing channel
