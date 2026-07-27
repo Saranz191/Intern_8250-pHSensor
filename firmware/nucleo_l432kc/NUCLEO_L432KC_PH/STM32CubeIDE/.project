@@ -36,6 +36,26 @@
 			<locationURI>PARENT-1-PROJECT_LOC/NUCLEO_L432KC_PH.ioc</locationURI>
 		</link>
 		<link>
+			<name>Application/ph_app.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Application/Src/ph_app.c</locationURI>
+		</link>
+		<link>
+			<name>Application/ph_fsm.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Application/Src/ph_fsm.c</locationURI>
+		</link>
+		<link>
+			<name>BSP/ph_board_port.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/BSP/Src/ph_board_port.c</locationURI>
+		</link>
+		<link>
+			<name>SIC8250/sic8250.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Drivers/SIC8250/Src/sic8250.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Src/main.c</locationURI>

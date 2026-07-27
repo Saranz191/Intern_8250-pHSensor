@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ph_app.h"
+#include "ph_board_port.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +43,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static ph_app_t ph_app;
+static sic8250_device_t ph_device;
+static ph_dependencies_t ph_dependencies;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,7 +90,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  ph_device.port = ph_board_port_default();
+  ph_dependencies.device = &ph_device;
+  (void)ph_app_init(&ph_app, &ph_dependencies);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -97,6 +102,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    (void)ph_app_process(&ph_app);
   }
   /* USER CODE END 3 */
 }

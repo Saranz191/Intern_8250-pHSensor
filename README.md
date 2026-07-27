@@ -17,18 +17,22 @@ measurement solution.
 
 ## Project structure
 
-`Core` contains STM32CubeIDE-generated startup and the application entry point.
-`Application` owns the top-level lifecycle and four-channel contexts.
+The generated project root is
+`firmware/nucleo_l432kc/NUCLEO_L432KC_PH`. Its generated headers and sources
+live in `Inc` and `Src`; the `STM32CubeIDE` child contains the Eclipse project
+metadata. `Application` owns the top-level lifecycle and four-channel contexts.
 `Domain` defines transport-independent types and the FSM contract.
 `Drivers/SIC8250` defines hardware-independent SIC8250 operation boundaries.
-`BSP` owns board-specific STM32 HAL and hardware access.
+`BSP` defines the board-port boundary and currently performs no hardware I/O.
 `docs` contains the assignment and the approved reference flow diagram.
 
 ## Open in STM32CubeIDE
 
-Import `firmware/nucleo_l432kc` as an existing project, open
-`NUCLEO_L432KC_PH.ioc`, configure the real board connections, regenerate only
-after reviewing CubeMX changes, and build the Debug configuration.
+Import
+`firmware/nucleo_l432kc/NUCLEO_L432KC_PH/STM32CubeIDE` as an existing project,
+open the linked `NUCLEO_L432KC_PH.ioc`, configure the real board connections,
+regenerate only after reviewing CubeMX changes, and build the Debug
+configuration.
 
 ## Assignment
 

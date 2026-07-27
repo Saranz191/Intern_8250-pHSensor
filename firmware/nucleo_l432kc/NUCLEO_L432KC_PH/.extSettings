@@ -1,0 +1,7 @@
+[ProjectFiles]
+HeaderPath=Application/Inc;Domain/Inc;Drivers/SIC8250/Inc;BSP/Inc;
+
+[Groups]
+Application=Application/Src/ph_app.c;Application/Src/ph_fsm.c;
+SIC8250=Drivers/SIC8250/Src/sic8250.c;
+BSP=BSP/Src/ph_board_port.c;
