@@ -25,10 +25,12 @@ voltage-to-pH conversion.
 ## Goals
 
 - Provide a STM32CubeIDE/CubeMX project for NUCLEO-L432KC.
-- Keep SPI, GPIO, power, reset, and board timing unconfigured so the intern
-  must complete the `.ioc` file from the real wiring.
-- Separate application orchestration, FSM/domain logic, SIC8250 device access,
-  and board-specific hardware access.
+- Preserve the CubeMX board-default LD3/VCP GPIO initialization, while keeping
+  SIC8250/application SPI, chip select, reset, power, other application GPIO,
+  and board timing unconfigured so the intern must complete the `.ioc` file
+  from the real wiring.
+- Separate application lifecycle/FSM, shared domain types/configuration,
+  SIC8250 device access, and board-specific hardware access.
 - Fix the required channel count at four while leaving channel scheduling and
   channel-selection implementation to the intern.
 - Provide compile-safe stubs that never access hardware until implemented.
@@ -89,7 +91,7 @@ The main loop must remain non-blocking. In the initial skeleton,
 
 ### Application layer
 
-The application layer owns the top-level lifecycle and the four channel
+The application layer owns the top-level lifecycle, FSM, and the four channel
 contexts:
 
 ```c
@@ -106,19 +108,6 @@ are published. The skeleton does not decide which channel runs next, whether
 contexts are processed sequentially or cooperatively, or how retries affect
 channel ordering.
 
-### Domain and FSM layer
-
-The domain layer defines transport-independent types:
-
-- channel identifier
-- raw ADC value
-- voltage
-- pH value
-- timestamp
-- typed status
-- sample record
-- minimum safe-idle FSM context
-
 The initial state model contains only enough information to represent an
 unimplemented safe idle state. The intern derives all operational states,
 events, guards, actions, and transitions from the flow diagram.
@@ -133,6 +122,19 @@ ph_status_t ph_fsm_get_status(const ph_fsm_t *fsm);
 ```
 
 These functions are compile-safe stubs and do not encode the completed flow.
+
+### Domain layer
+
+The domain layer owns shared transport-independent types and configuration:
+
+- fixed channel count
+- channel identifier
+- raw ADC value
+- voltage
+- pH value
+- timestamp
+- typed status
+- sample record
 
 ### SIC8250 driver layer
 
@@ -167,8 +169,10 @@ minimum hardware services required by higher layers:
 - optional power control
 - optional reset control
 
-No SPI peripheral, GPIO pin, chip-select pin, power pin, or reset pin is
-selected in the initial project. The board implementation returns
+No SIC8250/application SPI peripheral, chip-select pin, power pin, reset pin,
+or other application GPIO is selected in the initial project. CubeMX
+board-default LD3/VCP GPIO initialization remains, but the starter application
+never uses those pins. The board implementation returns
 `PH_STATUS_NOT_IMPLEMENTED` and performs no I/O.
 
 ## Data Flow
@@ -206,8 +210,8 @@ scheduling algorithm.
 
 No automated tests, host test harness, fake BSP, CMake host build, or CI
 workflow are included. Verification of the initial skeleton is limited to
-opening the project in STM32CubeIDE and confirming that the unconfigured,
-safe-idle firmware builds successfully.
+opening the project in STM32CubeIDE and confirming that the safe-idle firmware
+with no application hardware assignment builds successfully.
 
 ## Assignment Guidance
 
@@ -222,8 +226,9 @@ safe-idle firmware builds successfully.
 7. implement ready, timeout, retry, and safe-stop behavior;
 8. implement conversion and channel-tagged reporting.
 
-The documentation explains responsibilities and acceptance criteria but does
-not provide completed code or a transition solution.
+The starter C and narrative documentation explain responsibilities and
+acceptance criteria without providing completed code or a transition solution.
+The unchanged draw.io remains the human-approved technical flow reference.
 
 ## Git Workflow
 
@@ -240,7 +245,9 @@ not provide completed code or a transition solution.
 - The repository contains only the `main` branch created by this setup.
 - STM32CubeIDE recognizes the STM32L432KC project and its `.ioc` file.
 - The safe-idle skeleton builds successfully in STM32CubeIDE.
-- No real SPI/GPIO assignment or SIC8250 register sequence is present.
+- No SIC8250/application SPI/GPIO assignment or SIC8250 register sequence is
+  present; only the retained CubeMX board-default LD3/VCP GPIO initialization
+  is excepted.
 - Project-owned code is divided into Application, Domain, SIC8250 driver, and
   BSP layers.
 - The stub supports the four-channel data model without implementing channel

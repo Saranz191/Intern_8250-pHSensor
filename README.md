@@ -5,8 +5,11 @@ Training firmware skeleton for NUCLEO-L432KC and SIC8250.
 ## Current state
 
 This `main` branch is intentionally incomplete. It builds in a safe idle state,
-does not configure SPI/GPIO, does not access SIC8250, and does not contain the
-measurement solution.
+retains the CubeMX board-default LD3/VCP GPIO initialization, and never uses
+those board-default pins. SIC8250/application SPI, chip select, reset, power,
+and other application GPIO remain unconfigured and unused. The starter C and
+narrative guidance contain no measurement solution; the unchanged draw.io is
+the approved technical flow reference.
 
 ## Learning objectives
 
@@ -20,8 +23,8 @@ measurement solution.
 The generated project root is
 `firmware/nucleo_l432kc/NUCLEO_L432KC_PH`. Its generated headers and sources
 live in `Inc` and `Src`; the `STM32CubeIDE` child contains the Eclipse project
-metadata. `Application` owns the top-level lifecycle and four-channel contexts.
-`Domain` defines transport-independent types and the FSM contract.
+metadata. `Application` owns the top-level lifecycle, FSM, and four-channel
+contexts. `Domain` owns shared transport-independent types and configuration.
 `Drivers/SIC8250` defines hardware-independent SIC8250 operation boundaries.
 `BSP` defines the board-port boundary and currently performs no hardware I/O.
 `docs` contains the assignment and the approved reference flow diagram.
