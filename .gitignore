@@ -1,0 +1,16 @@
+# STM32CubeIDE build output
+**/Debug/
+**/Release/
+
+# Local IDE and workspace state
+**/.settings/
+.metadata/
+*.launch
+
+# CubeMX backups and local scratch
+*.ioc.bak
+.codex-tmp/
+
+# Operating-system files
+Thumbs.db
+Desktop.ini
