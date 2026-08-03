@@ -142,4 +142,97 @@
       </root>
     </mxGraphModel>
   </diagram>
+  <diagram id="four-channel-fsm-v2" name="Four-Channel FSM v2">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="2200" math="0" shadow="0">
+      <root>
+        <mxCell id="v2-0" />
+        <mxCell id="v2-1" parent="v2-0" />
+        <mxCell id="v2-title" parent="v2-1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#1F2937;" value="SIC8250 pH Measurement - Four-Channel FSM v2" vertex="1">
+          <mxGeometry height="40" width="1100" x="60" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-note" parent="v2-1" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#4B5563;" value="One reusable FSM; active_channel selects 0..3. Decision diamonds are guards/events, not persistent states." vertex="1">
+          <mxGeometry height="24" width="1200" x="60" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-start" parent="v2-1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#DFF3E4;strokeColor=#2F855A;fontStyle=1;fontSize=13;" value="START" vertex="1">
+          <mxGeometry height="50" width="90" x="430" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-safe-idle" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontSize=12;" value="&lt;b&gt;SAFE_IDLE&lt;/b&gt;&lt;br&gt;No SIC8250 application I/O" vertex="1">
+          <mxGeometry height="65" width="280" x="335" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-power" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF2FF;strokeColor=#3468C0;fontSize=12;" value="&lt;b&gt;POWER_ON_WAIT&lt;/b&gt;&lt;br&gt;Power stable guard" vertex="1">
+          <mxGeometry height="65" width="280" x="335" y="295" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-init" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF2FF;strokeColor=#3468C0;fontSize=12;" value="&lt;b&gt;INIT_INTERFACE&lt;/b&gt;&lt;br&gt;Initialize and communication check" vertex="1">
+          <mxGeometry height="75" width="280" x="335" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-defaults" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF4E5;strokeColor=#D97706;fontSize=12;" value="&lt;b&gt;LOAD_DEFAULTS&lt;/b&gt;&lt;br&gt;One-time device defaults" vertex="1">
+          <mxGeometry height="65" width="280" x="335" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-select" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#2F855A;fontSize=12;" value="&lt;b&gt;SELECT_CHANNEL&lt;/b&gt;&lt;br&gt;active_channel ∈ {0,1,2,3}" vertex="1">
+          <mxGeometry height="75" width="300" x="325" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-config" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#2F855A;fontSize=12;" value="&lt;b&gt;CONFIGURE_CHANNEL&lt;/b&gt;&lt;br&gt;Reusable channel operation" vertex="1">
+          <mxGeometry height="65" width="300" x="325" y="745" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-start-meas" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#2F855A;fontSize=12;" value="&lt;b&gt;START_ACQUISITION&lt;/b&gt;&lt;br&gt;Start timer; return to main loop" vertex="1">
+          <mxGeometry height="75" width="300" x="325" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-ready" parent="v2-1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF8CC;strokeColor=#B7791F;fontSize=11;" value="&lt;b&gt;ADC_READY?&lt;/b&gt;" vertex="1">
+          <mxGeometry height="100" width="190" x="380" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-timeout" parent="v2-1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF8CC;strokeColor=#B7791F;fontSize=11;" value="&lt;b&gt;TIMEOUT?&lt;/b&gt;" vertex="1">
+          <mxGeometry height="95" width="180" x="720" y="985" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-recovery" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FDECEC;strokeColor=#C53030;fontSize=11;fontColor=#9B2C2C;" value="&lt;b&gt;RECOVERY&lt;/b&gt;&lt;br&gt;Record error; decide retry policy" vertex="1">
+          <mxGeometry height="80" width="280" x="975" y="985" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-read" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF2FF;strokeColor=#3468C0;fontSize=12;" value="&lt;b&gt;READ_RESULT&lt;/b&gt;&lt;br&gt;Capture raw result for active channel" vertex="1">
+          <mxGeometry height="75" width="300" x="325" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-voltage" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F1EAFE;strokeColor=#7C3AED;fontSize=12;" value="&lt;b&gt;CONVERT_VOLTAGE&lt;/b&gt;&lt;br&gt;Use configurable calibration" vertex="1">
+          <mxGeometry height="65" width="300" x="325" y="1250" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-ph" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F1EAFE;strokeColor=#7C3AED;fontSize=12;" value="&lt;b&gt;CONVERT_PH&lt;/b&gt;&lt;br&gt;Apply project calibration policy" vertex="1">
+          <mxGeometry height="65" width="300" x="325" y="1355" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-report" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF2FF;strokeColor=#3468C0;fontSize=12;" value="&lt;b&gt;REPORT_SAMPLE&lt;/b&gt;&lt;br&gt;Publish sample + status + channel_id" vertex="1">
+          <mxGeometry height="75" width="300" x="325" y="1460" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-cycle" parent="v2-1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF8CC;strokeColor=#B7791F;fontSize=11;" value="&lt;b&gt;ALL 4 CHANNELS DONE?&lt;/b&gt;" vertex="1">
+          <mxGeometry height="115" width="220" x="365" y="1575" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-wait-period" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontSize=11;" value="&lt;b&gt;WAIT_SAMPLE_PERIOD&lt;/b&gt;&lt;br&gt;Non-blocking timer" vertex="1">
+          <mxGeometry height="70" width="300" x="325" y="1740" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-channel-done" parent="v2-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EAF7EE;strokeColor=#2F855A;fontSize=11;" value="&lt;b&gt;CHANNEL_DONE&lt;/b&gt;&lt;br&gt;Advance active_channel" vertex="1">
+          <mxGeometry height="70" width="300" x="720" y="1740" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-safe-stop" parent="v2-1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#FDECEC;strokeColor=#C53030;fontStyle=1;fontSize=12;fontColor=#9B2C2C;" value="SAFE_STOP" vertex="1">
+          <mxGeometry height="70" width="130" x="1050" y="1190" as="geometry" />
+        </mxCell>
+        <mxCell id="v2-e1" edge="1" parent="v2-1" source="v2-start" target="v2-safe-idle"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e2" edge="1" parent="v2-1" source="v2-safe-idle" target="v2-power"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e3" edge="1" parent="v2-1" source="v2-power" target="v2-init"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e4" edge="1" parent="v2-1" source="v2-init" target="v2-defaults"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e5" edge="1" parent="v2-1" source="v2-defaults" target="v2-select"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e6" edge="1" parent="v2-1" source="v2-select" target="v2-config"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e7" edge="1" parent="v2-1" source="v2-config" target="v2-start-meas"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e8" edge="1" parent="v2-1" source="v2-start-meas" target="v2-ready"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e9" edge="1" parent="v2-1" source="v2-ready" target="v2-read" value="YES"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e10" edge="1" parent="v2-1" source="v2-ready" target="v2-timeout" value="NO"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e11" edge="1" parent="v2-1" source="v2-timeout" target="v2-ready" value="NO: poll next loop"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e12" edge="1" parent="v2-1" source="v2-timeout" target="v2-recovery" value="YES"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e13" edge="1" parent="v2-1" source="v2-read" target="v2-voltage"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e14" edge="1" parent="v2-1" source="v2-voltage" target="v2-ph"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e15" edge="1" parent="v2-1" source="v2-ph" target="v2-report"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e16" edge="1" parent="v2-1" source="v2-report" target="v2-cycle"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e17" edge="1" parent="v2-1" source="v2-cycle" target="v2-channel-done" value="NO: next channel"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e18" edge="1" parent="v2-1" source="v2-channel-done" target="v2-select"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e19" edge="1" parent="v2-1" source="v2-cycle" target="v2-wait-period" value="YES: cycle complete"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e20" edge="1" parent="v2-1" source="v2-wait-period" target="v2-select" value="period elapsed"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e21" edge="1" parent="v2-1" source="v2-recovery" target="v2-init" value="retry allowed"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="v2-e22" edge="1" parent="v2-1" source="v2-recovery" target="v2-safe-stop" value="retry exhausted"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
 </mxfile>
