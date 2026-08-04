@@ -14,6 +14,11 @@
 *.ioc.bak
 .codex-tmp/
 
+# Locally maintained flow diagrams and diagrams.net backups
+docs/*.drawio
+docs/.*.drawio.bkp
+docs/*.drawio.bkp
+
 # Operating-system files
 Thumbs.db
 Desktop.ini

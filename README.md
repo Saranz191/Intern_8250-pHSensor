@@ -7,16 +7,18 @@ Training firmware skeleton for NUCLEO-L432KC and SIC8250.
 This `main` branch is intentionally incomplete. It builds in a safe idle state,
 retains the CubeMX board-default LD3/VCP GPIO initialization, and never uses
 those board-default pins. SIC8250/application SPI, chip select, reset, power,
-and other application GPIO remain unconfigured and unused. The starter C and
-narrative guidance contain no measurement solution; the unchanged draw.io is
-the approved technical flow reference.
+application UART, DMA, and other application GPIO remain unconfigured and
+unused. The starter C defines the intended seven-state FSM, four-channel data
+model, binary protocol frame, communication boundary, and operation APIs while
+leaving their behavior as safe compile-time stubs.
 
 ## Learning objectives
 
-- derive a non-blocking FSM from the supplied flow diagram;
+- complete a non-blocking FSM from the canonical baseline contract;
 - separate Application, Domain, device-driver, and BSP responsibilities;
 - extend a reusable single-channel operation to four channels;
-- preserve channel identity through samples and errors.
+- preserve channel identity through samples and errors;
+- implement framed host communication without mixing protocol and hardware I/O.
 
 ## Project structure
 
@@ -26,8 +28,10 @@ live in `Inc` and `Src`; the `STM32CubeIDE` child contains the Eclipse project
 metadata. `Application` owns the top-level lifecycle, FSM, and four-channel
 contexts. `Domain` owns shared transport-independent types and configuration.
 `Drivers/SIC8250` defines hardware-independent SIC8250 operation boundaries.
-`BSP` defines the board-port boundary and currently performs no hardware I/O.
-`docs` contains the assignment and the approved reference flow diagram.
+`Protocol` owns the transport-independent binary frame. `Communication` owns
+RX/TX processing and frame queues. `BSP` defines board-port boundaries and
+currently performs no hardware I/O. `docs` contains the assignment and the
+canonical baseline design. Local flowcharts are intentionally ignored by Git.
 
 ## Open in STM32CubeIDE
 
@@ -39,7 +43,7 @@ configuration.
 
 ## Assignment
 
-Read `docs/assignment.md` and `docs/SIC8250_pH_OCP_Flow.drawio`.
+Read `docs/assignment.md` and `docs/firmware-baseline-design.md`.
 
 ## Git workflow
 

@@ -5,8 +5,8 @@
 
 ## สิ่งที่ต้องศึกษาและออกแบบ
 
-อ่านไฟล์ `SIC8250_pH_OCP_Flow.drawio` แล้วสกัด state, event, guard, action และ
-transition ออกมาเป็นแบบออกแบบของคุณเองก่อนเริ่มเขียนโค้ด รวมถึงอธิบายตาราง
+อ่าน `firmware-baseline-design.md` แล้วเติม event, guard, action และ transition
+ของ FSM เจ็ด state ให้ครบก่อนเริ่มเขียน measurement code รวมถึงอธิบายตาราง
 transition ที่เลือกใช้ การออกแบบต้องไม่ผูกกับการหน่วงเวลาแบบบล็อก และต้องรักษา
 หมายเลขช่องไว้กับทุกตัวอย่างและทุกข้อผิดพลาด
 
@@ -19,6 +19,8 @@ transition ที่เลือกใช้ การออกแบบต้�
 - ออกแบบการจัดตารางทำงานสำหรับทั้งสี่ช่อง และทำให้ operation ของช่องเดียวใช้ซ้ำได้
 - ออกแบบการจัดการ ADC-ready, timeout, retry, recovery และ safe-stop ให้ครบถ้วน
 - แปลงค่าที่อ่านได้เป็นค่าที่ต้องรายงาน และส่งผลลัพธ์ที่ติดป้ายหมายเลขช่องเสมอ
+- พัฒนา parser/encoder ของ protocol frame และเชื่อม RX/TX ผ่าน BSP โดยไม่ทำงานหนักใน interrupt
+- ทำให้ `SET_CONFIG`, `START`, `STOP`, `GET_STATUS` และผล sample จับคู่กับ sequence/job ID ได้
 
 ลำดับการตั้งค่าอุปกรณ์ต้องออกแบบให้ใช้ซ้ำได้ ห้ามคัดลอกชุดคำสั่งเดิมสี่ครั้งสำหรับ
 แต่ละช่อง ห้ามใช้การ polling ADC แบบบล็อก
@@ -30,6 +32,8 @@ transition ที่เลือกใช้ การออกแบบต้�
 - การเรียก HAL อยู่ใน BSP เท่านั้น
 - ลำดับ operation ของ SIC8250 ใช้ซ้ำได้ ไม่ใช่โค้ดสี่ชุดสำหรับสี่ช่อง
 - แบบออกแบบและ implementation แสดงการจัดการ ADC-ready, timeout, retry, recovery และ safe-stop
+- protocol ตรวจ version, length และ CRC และสามารถ resynchronize หลัง frame เสียได้
+- `STOP` และ `GET_STATUS` ใช้งานได้ระหว่างกำลังวัด โดยไม่มี module อื่นเขียน SIC8250 โดยตรง
 - pull request มีหลักฐานว่า STM32CubeIDE Debug build สำเร็จ
 
 ## การส่งงาน

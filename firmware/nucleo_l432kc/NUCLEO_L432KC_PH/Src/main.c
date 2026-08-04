@@ -23,6 +23,9 @@
 /* USER CODE BEGIN Includes */
 #include "ph_app.h"
 #include "ph_board_port.h"
+#include "ph_command_dispatcher.h"
+#include "ph_comm_board_port.h"
+#include "ph_communication.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,6 +49,9 @@
 static ph_app_t ph_app;
 static sic8250_device_t ph_device;
 static ph_dependencies_t ph_dependencies;
+static ph_communication_t ph_communication;
+static ph_protocol_frame_t ph_request_frame;
+static ph_protocol_frame_t ph_response_frame;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,8 +97,12 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
   ph_device.port = ph_board_port_default();
+  ph_device.active_channel = PH_CHANNEL_NONE;
   ph_dependencies.device = &ph_device;
   (void)ph_app_init(&ph_app, &ph_dependencies);
+  (void)ph_communication_init(
+      &ph_communication,
+      ph_comm_board_port_default());
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -102,7 +112,27 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    bool frame_available = false;
+
+    (void)ph_communication_process_rx(&ph_communication);
+    (void)ph_communication_take_frame(
+        &ph_communication,
+        &ph_request_frame,
+        &frame_available);
+
+    if (frame_available) {
+      if (ph_command_dispatch(
+              &ph_app,
+              &ph_request_frame,
+              &ph_response_frame) == PH_STATUS_OK) {
+        (void)ph_communication_queue_frame(
+            &ph_communication,
+            &ph_response_frame);
+      }
+    }
+
     (void)ph_app_process(&ph_app);
+    (void)ph_communication_process_tx(&ph_communication);
   }
   /* USER CODE END 3 */
 }

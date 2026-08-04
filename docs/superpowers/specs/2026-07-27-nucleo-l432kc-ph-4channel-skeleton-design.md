@@ -1,5 +1,8 @@
 # NUCLEO-L432KC Four-Channel pH Training Skeleton Design
 
+> Historical setup record. The current canonical training contract is
+> `docs/firmware-baseline-design.md`.
+
 ## Purpose
 
 Create the initial `main` branch for an intern training project targeting the
@@ -14,8 +17,8 @@ voltage-to-pH conversion.
 
 ## Inputs
 
-- `firmware/SIC8250_pH_OCP_Flow.drawio` is the functional flow reference and
-  will be copied into the repository documentation.
+- `docs/firmware-baseline-design.md` is the current functional FSM and protocol
+  contract. Working draw.io files remain local and ignored by Git.
 - `firmware/macallan_low_leakage_dropper_sum.py` and
   `firmware/generated_registers.py` are instructor-side reference
   implementations used only to identify useful abstraction boundaries.
@@ -53,7 +56,7 @@ voltage-to-pH conversion.
 Intern_8250-pHSensor/
 |-- docs/
 |   |-- assignment.md
-|   |-- SIC8250_pH_OCP_Flow.drawio
+|   |-- firmware-baseline-design.md
 |   `-- superpowers/
 |       |-- plans/
 |       `-- specs/

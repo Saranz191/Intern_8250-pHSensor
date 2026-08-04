@@ -46,9 +46,29 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Application/Src/ph_fsm.c</locationURI>
 		</link>
 		<link>
+			<name>Application/ph_command_dispatcher.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Application/Src/ph_command_dispatcher.c</locationURI>
+		</link>
+		<link>
 			<name>BSP/ph_board_port.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/BSP/Src/ph_board_port.c</locationURI>
+		</link>
+		<link>
+			<name>BSP/ph_comm_board_port.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/BSP/Src/ph_comm_board_port.c</locationURI>
+		</link>
+		<link>
+			<name>Communication/ph_communication.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Communication/Src/ph_communication.c</locationURI>
+		</link>
+		<link>
+			<name>Protocol/ph_protocol.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Protocol/Src/ph_protocol.c</locationURI>
 		</link>
 		<link>
 			<name>SIC8250/sic8250.c</name>
