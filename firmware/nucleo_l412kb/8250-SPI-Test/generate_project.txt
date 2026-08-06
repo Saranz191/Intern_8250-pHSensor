@@ -1,0 +1,4 @@
+config load "C:/Users/saran/OneDrive/Desktop/8250_fw/firmware/8250-SPI_Test/8250-SPI_Test.ioc"
+project toolchain STM32CubeIDE
+project generate
+exit
