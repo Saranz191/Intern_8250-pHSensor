@@ -26,6 +26,7 @@
 #include "ph_command_dispatcher.h"
 #include "ph_comm_board_port.h"
 #include "ph_communication.h"
+#include "spi.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,6 +53,9 @@ static ph_dependencies_t ph_dependencies;
 static ph_communication_t ph_communication;
 static ph_protocol_frame_t ph_request_frame;
 static ph_protocol_frame_t ph_response_frame;
+volatile uint32_t g_sic8250_adc_code[PH_CHANNEL_COUNT];
+volatile uint8_t g_sic8250_adc_fraction[PH_CHANNEL_COUNT];
+volatile sic8250_status_t g_sic8250_channel_status[PH_CHANNEL_COUNT];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,6 +67,51 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+static sic8250_status_t SIC8250_MeasureChannel(
+    sic8250_device_t *device,
+    uint8_t channel_id,
+    uint32_t *adc_code)
+{
+  bool ready = false;
+  sic8250_status_t status;
+
+  status = sic8250_configure_measurement(device, channel_id);
+  if (status == SIC8250_STATUS_OK) {
+    status = sic8250_start_measurement(device);
+  }
+
+  while ((status == SIC8250_STATUS_OK) ||
+         (status == SIC8250_STATUS_NOT_READY)) {
+    status = sic8250_check_ready(device, channel_id, &ready);
+    if ((status == SIC8250_STATUS_OK) && ready) {
+      return sic8250_read_adc(device, channel_id, adc_code);
+    }
+    if (status == SIC8250_STATUS_NOT_READY) {
+      HAL_Delay(1U);
+    }
+  }
+
+  return status;
+}
+
+static void SIC8250_MeasureAllChannels(sic8250_device_t *device)
+{
+  uint8_t channel_id;
+
+  for (channel_id = 0U; channel_id < PH_CHANNEL_COUNT; ++channel_id) {
+    uint32_t adc_code = 0U;
+
+    g_sic8250_channel_status[channel_id] =
+        SIC8250_MeasureChannel(device, channel_id, &adc_code);
+    if (g_sic8250_channel_status[channel_id] == SIC8250_STATUS_OK) {
+      g_sic8250_adc_code[channel_id] = adc_code;
+      g_sic8250_adc_fraction[channel_id] = device->last_adc_fraction;
+    }
+
+    (void)sic8250_stop(device);
+  }
+}
 
 /* USER CODE END 0 */
 
@@ -95,6 +144,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   ph_device.port = ph_board_port_default();
   ph_device.active_channel = PH_CHANNEL_NONE;
@@ -103,6 +153,11 @@ int main(void)
   (void)ph_communication_init(
       &ph_communication,
       ph_comm_board_port_default());
+
+  if ((sic8250_init(&ph_device) != SIC8250_STATUS_OK) ||
+      (sic8250_load_defaults(&ph_device) != SIC8250_STATUS_OK)) {
+    Error_Handler();
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,27 +167,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    bool frame_available = false;
-
-    (void)ph_communication_process_rx(&ph_communication);
-    (void)ph_communication_take_frame(
-        &ph_communication,
-        &ph_request_frame,
-        &frame_available);
-
-    if (frame_available) {
-      if (ph_command_dispatch(
-              &ph_app,
-              &ph_request_frame,
-              &ph_response_frame) == PH_STATUS_OK) {
-        (void)ph_communication_queue_frame(
-            &ph_communication,
-            &ph_response_frame);
-      }
-    }
-
-    (void)ph_app_process(&ph_app);
-    (void)ph_communication_process_tx(&ph_communication);
+    SIC8250_MeasureAllChannels(&ph_device);
+    HAL_Delay(PH_DEFAULT_SAMPLE_PERIOD_MS);
   }
   /* USER CODE END 3 */
 }
@@ -205,7 +241,8 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(SIC8250_CS_GPIO_Port, SIC8250_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(SIC8250_RESET_GPIO_Port, SIC8250_RESET_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : VCP_TX_Pin */
   GPIO_InitStruct.Pin = VCP_TX_Pin;
@@ -223,12 +260,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF3_USART2;
   HAL_GPIO_Init(VCP_RX_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LD3_Pin */
-  GPIO_InitStruct.Pin = LD3_Pin;
+  /* Configure SIC8250 CS (D10/PA11) and RESET (D0/PA10). */
+  GPIO_InitStruct.Pin = SIC8250_CS_Pin | SIC8250_RESET_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LD3_GPIO_Port, &GPIO_InitStruct);
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 

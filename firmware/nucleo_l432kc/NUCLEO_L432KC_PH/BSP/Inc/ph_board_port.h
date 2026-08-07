@@ -22,6 +22,7 @@ typedef struct {
         uint8_t address,
         uint8_t *value);
     uint32_t (*millis)(void *context);
+    void (*delay_ms)(void *context, uint32_t delay_ms);
     ph_board_status_t (*set_power)(void *context, bool enabled);
     ph_board_status_t (*set_reset)(void *context, bool asserted);
 } ph_board_port_t;

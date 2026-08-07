@@ -19,6 +19,10 @@ typedef enum {
 typedef struct {
     const ph_board_port_t *port;
     uint8_t active_channel;
+    uint8_t ready_token;
+    uint8_t last_adc_fraction;
+    uint32_t measurement_started_ms;
+    bool measurement_running;
 } sic8250_device_t;
 
 sic8250_status_t sic8250_init(sic8250_device_t *device);

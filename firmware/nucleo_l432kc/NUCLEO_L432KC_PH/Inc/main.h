@@ -69,6 +69,10 @@ void Error_Handler(void);
 #define VCP_RX_GPIO_Port GPIOA
 #define LD3_Pin GPIO_PIN_3
 #define LD3_GPIO_Port GPIOB
+#define SIC8250_RESET_Pin GPIO_PIN_10
+#define SIC8250_RESET_GPIO_Port GPIOA
+#define SIC8250_CS_Pin GPIO_PIN_11
+#define SIC8250_CS_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

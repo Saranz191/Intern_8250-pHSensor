@@ -77,6 +77,34 @@ void HAL_MspInit(void)
   /* USER CODE END MspInit 1 */
 }
 
+void HAL_SPI_MspInit(SPI_HandleTypeDef *spiHandle)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+  if (spiHandle->Instance == SPI1)
+  {
+    __HAL_RCC_SPI1_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+
+    /* NUCLEO-L432KC Arduino D13/D12/D11: PB3/PB4/PB5. */
+    GPIO_InitStruct.Pin = GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  }
+}
+
+void HAL_SPI_MspDeInit(SPI_HandleTypeDef *spiHandle)
+{
+  if (spiHandle->Instance == SPI1)
+  {
+    __HAL_RCC_SPI1_CLK_DISABLE();
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5);
+  }
+}
+
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
